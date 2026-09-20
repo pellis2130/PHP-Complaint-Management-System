@@ -1,19 +1,24 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background-color: #f4f6f8;
-    color: #222;
+    background-color: #fff7f9;
+    color: #352f32;
 }
 
 header {
-    background-color: #17324d;
+    background-color: #b85c76;
     color: white;
     text-align: center;
     padding: 30px;
+    box-shadow: 0 2px 8px rgba(90, 45, 60, 0.12);
 }
 
 header h1 {
     margin-bottom: 5px;
+}
+
+header p {
+    color: #fff2f5;
 }
 
 main {
@@ -26,9 +31,14 @@ main {
     background-color: white;
     padding: 35px;
     width: 500px;
-    border-radius: 10px;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(120, 70, 85, 0.14);
     text-align: center;
+    border: 1px solid #f3dce3;
+}
+
+.card h2 {
+    color: #713d4d;
 }
 
 .buttons {
@@ -39,24 +49,32 @@ main {
     display: inline-block;
     padding: 12px 22px;
     margin: 5px;
-    background-color: #17324d;
+    background-color: #cf718b;
     color: white;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 6px;
+    border: none;
+    transition: background-color 0.2s ease;
 }
 
 .button:hover {
-    background-color: #244e73;
+    background-color: #ad536d;
 }
 
 .success {
-    color: green;
+    color: #56785f;
     font-weight: bold;
+    background-color: #eef7f0;
+    padding: 10px;
+    border-radius: 5px;
 }
 
 .error {
-    color: red;
+    color: #a33f55;
     font-weight: bold;
+    background-color: #fff0f3;
+    padding: 10px;
+    border-radius: 5px;
 }
 
 form {
@@ -67,26 +85,47 @@ label {
     display: block;
     margin-top: 15px;
     font-weight: bold;
+    color: #513b43;
 }
 
 input,
 select,
 textarea {
     width: 100%;
-    padding: 10px;
+    padding: 11px;
     margin-top: 5px;
     box-sizing: border-box;
+    border: 1px solid #d9c3ca;
+    border-radius: 5px;
+    background-color: #fffdfd;
+    color: #352f32;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #cf718b;
+    box-shadow: 0 0 0 2px rgba(207, 113, 139, 0.15);
 }
 
 input[type="submit"] {
     margin-top: 20px;
-    background-color: #17324d;
+    background-color: #cf718b;
     color: white;
     border: none;
     cursor: pointer;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+input[type="submit"]:hover {
+    background-color: #ad536d;
 }
 
 footer {
     text-align: center;
     padding: 20px;
+    color: #80656e;
+    background-color: #fcecf1;
 }

@@ -20,7 +20,15 @@
 
             <h2>Account Login</h2>
 
-            <form method="POST">
+            <?php if (isset($_GET['registered'])) : ?>
+                <p>Account created successfully. Please log in.</p>
+            <?php endif; ?>
+
+            <?php if (isset($error)) : ?>
+                <p><?php echo htmlspecialchars($error); ?></p>
+            <?php endif; ?>
+
+            <form method="POST" action="../controller/login_controller.php">
 
                 <label for="username">
                     Email or User ID
@@ -30,6 +38,7 @@
                     type="text"
                     id="username"
                     name="username"
+                    required
                 >
 
                 <label for="password">
@@ -40,6 +49,7 @@
                     type="password"
                     id="password"
                     name="password"
+                    required
                 >
 
                 <input

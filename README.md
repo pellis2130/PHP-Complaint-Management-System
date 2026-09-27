@@ -1,44 +1,72 @@
 # Complaint Management System
 
-## Project Overview
+The Complaint Management System is a PHP and MySQL web application designed to manage customer complaints from submission through resolution.
 
-The Complaint Management System is a PHP and MySQL web application designed to help customers submit and track complaints while allowing technicians and administrators to manage customer issues.
+The application uses object-oriented PHP and an MVC-style structure to separate database operations, application processing, and the user interface.
 
-This project is being developed as part of the Advanced Server-Side Scripting with PHP course. The application will be developed in multiple phases throughout the course.
+## Features
 
-## Phase #2 – Database and Application Framework
+### Customer
+- Create a customer account
+- Log in securely
+- Update profile information
+- Submit new complaints
+- Select a product or service
+- Select a complaint type
+- View submitted complaints
+- Track complaint status
+- Log out securely
 
-During Phase #2, the foundation of the Complaint Management System was created. This phase focused on developing the database structure, establishing the PHP application framework, and confirming communication between the application and MySQL database.
+### Technician
+- Log in using an employee account
+- View assigned complaints
+- View complaint details
+- Add technician notes
+- Mark complaints as resolved
+- Add resolution notes
+- Change password
+- Log out securely
 
-## Features Completed
+### Administrator
+- Log in using an administrator account
+- View open complaints
+- Assign complaints to technicians
+- View customers and employees
+- Manage products and services
+- Add and remove products/services
+- Manage complaint types
+- Add and remove complaint types
+- Change password
+- Log out securely
 
-- Created the MySQL `complaint_management` database
-- Created the initial database tables
-- Established relationships between complaint-related data
-- Added five products/services
-- Added three complaint types
-- Created a PHP database connection class
-- Confirmed successful connection between PHP and MySQL
-- Created an MVC-style project folder structure
-- Created the customer registration interface
-- Created the account login interface
-- Added reusable input validation support
-- Created and styled the main welcome page
-- Exported the database to an SQL file
+## Complaint Process
 
-## Database Tables
+The application supports the complaint process from beginning to end:
 
-The database currently contains the following tables:
+1. A customer submits a complaint.
+2. The complaint is stored with an Open status.
+3. An administrator reviews the complaint.
+4. The administrator assigns the complaint to a technician.
+5. The technician views the assigned complaint.
+6. The technician can add notes while working on the issue.
+7. The technician adds resolution notes and marks the complaint as resolved.
+8. The complaint status is updated to Closed.
 
-- `customers`
-- `employees`
-- `products`
-- `complaint_types`
-- `complaints`
-- `technician_notes`
-- `complaint_images`
+## Database
 
-These tables provide the foundation for storing customer accounts, employee accounts, products and services, complaint categories, complaints, technician notes, and uploaded complaint images.
+The application uses a MySQL database named:
+
+`complaint_management`
+
+The database contains tables for:
+
+- Customers
+- Employees
+- Products / Services
+- Complaint Types
+- Complaints
+- Complaint Images
+- Technician Notes
 
 ## Technologies Used
 
@@ -54,55 +82,27 @@ These tables provide the foundation for storing customer accounts, employee acco
 
 ## Project Structure
 
-ComplaintManagementSystem/
+The project is organized using an MVC-style structure:
 
-    controller/
-    css/
-        styles.css
-    includes/
-        validation.php
-    model/
-        database.php
-    sql/
-        complaint_management.sql
-    view/
-        home.php
-        login.php
-        register.php
-    index.php
+- `model/` - PHP objects and database operations
+- `view/` - User interface pages
+- `controller/` - Processes user requests and application actions
+- `css/` - Application styling
+- `includes/` - Reusable application functions
+- `sql/` - Database SQL files
 
-## Database Setup
+## Security
 
-1. Start Apache and MySQL using XAMPP.
-2. Open phpMyAdmin.
-3. Create or import the `complaint_management` database.
-4. Import the `complaint_management.sql` file located in the `sql` folder.
-5. Verify that all required tables were created.
-6. Open the project through localhost.
+The application includes:
 
-## Running the Application
-
-Place the project folder inside the XAMPP `htdocs` directory.
-
-The application can then be accessed through:
-
-    http://localhost/ComplaintManagementSystem/
-
-Make sure both Apache and MySQL are running before opening the application.
-
-## Current Status
-
-Phase #2 establishes the database and basic application framework. The application currently connects successfully to the MySQL database and includes the initial customer registration and login interfaces.
-
-Future phases will expand the system with database-backed PHP objects, CRUD operations, complaint management functionality, authentication and authorization, technician functions, administrator functions, image/file support, and final testing.
+- Password hashing
+- Password verification
+- Session-based authentication
+- Role-based access for customers, technicians, and administrators
+- Prepared database statements
+- Input validation
+- Protected customer, technician, and administrator pages
 
 ## Author
 
 Princess Ellis
-
-Advanced Server-Side Scripting with PHP  
-ECPI University
-
-## License
-
-This project is for educational purposes.

@@ -10,7 +10,7 @@ if (
     exit;
 }
 
-$firstName = $_SESSION['first_name'];
+$firstName = $_SESSION['first_name'] ?? '';
 
 ?>
 

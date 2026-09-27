@@ -13,8 +13,9 @@ if (
 require_once __DIR__ . '/../model/complaint_db.php';
 require_once __DIR__ . '/../model/product_db.php';
 require_once __DIR__ . '/../model/complaint_type_db.php';
+require_once __DIR__ . '/../model/technician_note_db.php';
 
-$customerId = $_SESSION['customer_id'];
+$customerId = (int) $_SESSION['customer_id'];
 
 $complaints = ComplaintDB::getComplaintsByCustomer($customerId);
 
@@ -59,6 +60,10 @@ $complaints = ComplaintDB::getComplaintsByCustomer($customerId);
 
                     $type = ComplaintTypeDB::getComplaintType(
                         $complaint->getComplaintTypeId()
+                    );
+
+                    $notes = TechnicianNoteDB::getNotesByComplaint(
+                        $complaint->getComplaintId()
                     );
                     ?>
 
@@ -122,6 +127,38 @@ $complaints = ComplaintDB::getComplaintsByCustomer($customerId);
                             );
                             ?>
                         </p>
+
+                        <h4>Technician Notes</h4>
+
+                        <?php if (count($notes) === 0) : ?>
+
+                            <p>
+                                No technician notes have been added yet.
+                            </p>
+
+                        <?php else : ?>
+
+                            <?php foreach ($notes as $note) : ?>
+
+                                <p>
+                                    <?php
+                                    echo htmlspecialchars(
+                                        $note->getNoteText()
+                                    );
+                                    ?>
+                                </p>
+
+                                <small>
+                                    <?php
+                                    echo htmlspecialchars(
+                                        $note->getDateCreated()
+                                    );
+                                    ?>
+                                </small>
+
+                            <?php endforeach; ?>
+
+                        <?php endif; ?>
 
                     </div>
 

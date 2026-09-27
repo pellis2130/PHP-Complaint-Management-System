@@ -78,6 +78,15 @@ $employees = EmployeeDB::getEmployees();
                     ?>
                 </p>
 
+                <a
+                    href="admin_customer.php?id=<?php
+                    echo $customer->getCustomerId();
+                    ?>"
+                    class="button"
+                >
+                    Edit Customer
+                </a>
+
             </div>
 
         <?php endforeach; ?>
@@ -87,6 +96,12 @@ $employees = EmployeeDB::getEmployees();
     <hr>
 
     <h2>Employees</h2>
+
+    <a href="admin_employee.php" class="button">
+        Add Employee
+    </a>
+
+    <br><br>
 
     <?php if (count($employees) === 0) : ?>
 
@@ -118,6 +133,24 @@ $employees = EmployeeDB::getEmployees();
                 </p>
 
                 <p>
+                    <strong>Email:</strong>
+                    <?php
+                    echo htmlspecialchars(
+                        $employee->getEmail()
+                    );
+                    ?>
+                </p>
+
+                <p>
+                    <strong>Extension:</strong>
+                    <?php
+                    echo htmlspecialchars(
+                        $employee->getPhoneExtension()
+                    );
+                    ?>
+                </p>
+
+                <p>
                     <strong>Level:</strong>
                     <?php
                     echo htmlspecialchars(
@@ -125,6 +158,15 @@ $employees = EmployeeDB::getEmployees();
                     );
                     ?>
                 </p>
+
+                <a
+                    href="admin_employee.php?id=<?php
+                    echo $employee->getEmployeeId();
+                    ?>"
+                    class="button"
+                >
+                    Edit Employee
+                </a>
 
             </div>
 

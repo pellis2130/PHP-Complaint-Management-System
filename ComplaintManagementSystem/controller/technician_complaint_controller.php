@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $complaintId = (int) ($_POST['complaint_id'] ?? 0);
     $action = $_POST['action'] ?? '';
 
-    $technicianId = $_SESSION['employee_id'];
+    $technicianId = (int) $_SESSION['employee_id'];
 
     $complaint = ComplaintDB::getComplaint($complaintId);
 

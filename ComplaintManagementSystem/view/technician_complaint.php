@@ -16,7 +16,7 @@ require_once __DIR__ . '/../model/complaint_type_db.php';
 require_once __DIR__ . '/../model/technician_note_db.php';
 
 $complaintId = (int) ($_GET['id'] ?? 0);
-$technicianId = $_SESSION['employee_id'];
+$technicianId = (int) $_SESSION['employee_id'];
 
 $complaint = ComplaintDB::getComplaint($complaintId);
 

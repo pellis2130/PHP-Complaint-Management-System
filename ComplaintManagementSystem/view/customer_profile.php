@@ -12,7 +12,8 @@ if (
 
 require_once __DIR__ . '/../model/customer_db.php';
 
-$customer = CustomerDB::getCustomer($_SESSION['customer_id']);
+$customerId = (int) $_SESSION['customer_id'];
+$customer = CustomerDB::getCustomer($customerId);
 
 ?>
 

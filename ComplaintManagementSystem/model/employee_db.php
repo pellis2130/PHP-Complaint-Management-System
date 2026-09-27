@@ -161,45 +161,42 @@ class EmployeeDB
     }
 
     // Update employee
-    public static function updateEmployee($employee)
-    {
-        $db = new Database();
-        $connection = $db->getConnection();
+public static function updateEmployee($employee)
+{
+    $db = new Database();
+    $connection = $db->getConnection();
 
-        $query = "UPDATE employees
-                  SET UserID = ?,
-                      FirstName = ?,
-                      LastName = ?,
-                      Email = ?,
-                      PhoneExtension = ?,
-                      Level = ?
-                  WHERE EmployeeID = ?";
+    $query = "UPDATE employees
+              SET FirstName = ?,
+                  LastName = ?,
+                  Email = ?,
+                  PhoneExtension = ?,
+                  Level = ?
+              WHERE EmployeeID = ?";
 
-        $stmt = mysqli_prepare($connection, $query);
+    $stmt = mysqli_prepare($connection, $query);
 
-        $userId = $employee->getUserId();
-        $firstName = $employee->getFirstName();
-        $lastName = $employee->getLastName();
-        $email = $employee->getEmail();
-        $phoneExtension = $employee->getPhoneExtension();
-        $level = $employee->getLevel();
-        $employeeId = $employee->getEmployeeId();
+    $firstName = $employee->getFirstName();
+    $lastName = $employee->getLastName();
+    $email = $employee->getEmail();
+    $phoneExtension = $employee->getPhoneExtension();
+    $level = $employee->getLevel();
+    $employeeId = $employee->getEmployeeId();
 
-        mysqli_stmt_bind_param(
-            $stmt,
-            "ssssssi",
-            $userId,
-            $firstName,
-            $lastName,
-            $email,
-            $phoneExtension,
-            $level,
-            $employeeId
-        );
+    mysqli_stmt_bind_param(
+        $stmt,
+        "sssssi",
+        $firstName,
+        $lastName,
+        $email,
+        $phoneExtension,
+        $level,
+        $employeeId
+    );
 
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
-    }
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+}
 
     // Delete employee
     public static function updatePassword($employeeId, $password)

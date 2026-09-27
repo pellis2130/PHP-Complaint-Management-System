@@ -122,6 +122,28 @@ class ComplaintDB
         return $complaints;
     }
 
+    // Get open complaints with no technician assigned
+    public static function getUnassignedComplaints()
+    {
+        $db = new Database();
+        $connection = $db->getConnection();
+
+        $query = "SELECT * FROM complaints
+                WHERE Status = 'Open'
+                AND TechnicianID IS NULL
+                ORDER BY DateCreated DESC";
+
+        $result = mysqli_query($connection, $query);
+
+        $complaints = [];
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            $complaints[] = self::makeComplaint($row);
+        }
+
+        return $complaints;
+    }
+    
     // Add a new complaint
     public static function addComplaint($complaint)
     {

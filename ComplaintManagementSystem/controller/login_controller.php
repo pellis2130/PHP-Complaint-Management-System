@@ -8,7 +8,7 @@ require_once __DIR__ . '/../model/employee.php';
 require_once __DIR__ . '/../model/employee_db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
+    
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
 
@@ -23,6 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($customer && password_verify($password, $customer->getPassword())) {
 
+        session_regenerate_id(true);
+    
         $_SESSION['customer_id'] = $customer->getCustomerId();
         $_SESSION['first_name'] = $customer->getFirstName();
         $_SESSION['user_type'] = 'Customer';
@@ -35,6 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $employee = EmployeeDB::getEmployeeByUserId($username);
 
     if ($employee && password_verify($password, $employee->getPassword())) {
+
+        session_regenerate_id(true);
 
         $_SESSION['employee_id'] = $employee->getEmployeeId();
         $_SESSION['first_name'] = $employee->getFirstName();

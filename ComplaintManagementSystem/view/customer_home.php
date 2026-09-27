@@ -4,13 +4,13 @@ session_start();
 
 if (
     !isset($_SESSION['customer_id']) ||
-    $_SESSION['user_type'] !== 'Customer'
+    ($_SESSION['user_type'] ?? '') !== 'Customer'
 ) {
     header("Location: login.php");
     exit;
 }
 
-$firstName = $_SESSION['first_name'];
+$firstName = $_SESSION['first_name'] ?? '';
 
 ?>
 

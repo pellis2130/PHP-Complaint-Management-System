@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $customerId = $_SESSION['customer_id'];
+    $customerId = (int) $_SESSION['customer_id'];
 
     $currentCustomer = CustomerDB::getCustomer($customerId);
 

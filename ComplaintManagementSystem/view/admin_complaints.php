@@ -16,6 +16,7 @@ require_once __DIR__ . '/../model/complaint_type_db.php';
 require_once __DIR__ . '/../model/employee_db.php';
 
 $complaints = ComplaintDB::getComplaints();
+$unassignedComplaints = ComplaintDB::getUnassignedComplaints();
 $employees = EmployeeDB::getEmployees();
 
 ?>
@@ -40,15 +41,142 @@ $employees = EmployeeDB::getEmployees();
 
 <section class="card">
 
-    <h2>Open Customer Complaints</h2>
-
     <?php if (isset($_GET['assigned'])) : ?>
+
         <p class="success">
             Technician assigned successfully.
         </p>
+
     <?php endif; ?>
 
+
+    <h2>Unassigned Open Complaints</h2>
+
+    <?php if (count($unassignedComplaints) === 0) : ?>
+
+        <p>
+            There are currently no unassigned open complaints.
+        </p>
+
+    <?php else : ?>
+
+        <?php foreach ($unassignedComplaints as $complaint) : ?>
+
+            <?php
+
+            $product = ProductDB::getProduct(
+                $complaint->getProductId()
+            );
+
+            $type = ComplaintTypeDB::getComplaintType(
+                $complaint->getComplaintTypeId()
+            );
+
+            ?>
+
+            <div class="complaint">
+
+                <h3>
+                    Complaint #
+                    <?php echo htmlspecialchars(
+                        $complaint->getComplaintId()
+                    ); ?>
+                </h3>
+
+                <p>
+                    <strong>Product/Service:</strong>
+                    <?php echo htmlspecialchars(
+                        $product->getProductName()
+                    ); ?>
+                </p>
+
+                <p>
+                    <strong>Complaint Type:</strong>
+                    <?php echo htmlspecialchars(
+                        $type->getTypeName()
+                    ); ?>
+                </p>
+
+                <p>
+                    <strong>Description:</strong>
+                    <?php echo htmlspecialchars(
+                        $complaint->getDescription()
+                    ); ?>
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+                    <?php echo htmlspecialchars(
+                        $complaint->getStatus()
+                    ); ?>
+                </p>
+
+                <form
+                    method="POST"
+                    action="../controller/assign_controller.php"
+                >
+
+                    <input
+                        type="hidden"
+                        name="complaint_id"
+                        value="<?php echo $complaint->getComplaintId(); ?>"
+                    >
+
+                    <label>
+                        Assign Technician
+                    </label>
+
+                    <select name="technician_id" required>
+
+                        <option value="">
+                            Select Technician
+                        </option>
+
+                        <?php foreach ($employees as $employee) : ?>
+
+                            <?php if (
+                                $employee->getLevel() === 'Technician'
+                            ) : ?>
+
+                                <option
+                                    value="<?php echo $employee->getEmployeeId(); ?>"
+                                >
+                                    <?php
+                                    echo htmlspecialchars(
+                                        $employee->getFirstName() .
+                                        " " .
+                                        $employee->getLastName()
+                                    );
+                                    ?>
+                                </option>
+
+                            <?php endif; ?>
+
+                        <?php endforeach; ?>
+
+                    </select>
+
+                    <input
+                        type="submit"
+                        value="Assign Technician"
+                    >
+
+                </form>
+
+            </div>
+
+        <?php endforeach; ?>
+
+    <?php endif; ?>
+
+
+    <hr>
+
+
+    <h2>All Open Customer Complaints</h2>
+
     <?php
+
     $openComplaintFound = false;
 
     foreach ($complaints as $complaint) :
@@ -66,6 +194,7 @@ $employees = EmployeeDB::getEmployees();
         $type = ComplaintTypeDB::getComplaintType(
             $complaint->getComplaintTypeId()
         );
+
     ?>
 
         <div class="complaint">
@@ -105,6 +234,33 @@ $employees = EmployeeDB::getEmployees();
                 ); ?>
             </p>
 
+            <p>
+                <strong>Technician:</strong>
+
+                <?php
+
+                if ($complaint->getTechnicianId()) {
+
+                    $assignedEmployee = EmployeeDB::getEmployee(
+                        $complaint->getTechnicianId()
+                    );
+
+                    if ($assignedEmployee) {
+                        echo htmlspecialchars(
+                            $assignedEmployee->getFirstName() .
+                            " " .
+                            $assignedEmployee->getLastName()
+                        );
+                    }
+
+                } else {
+                    echo "Not Assigned";
+                }
+
+                ?>
+
+            </p>
+
             <form
                 method="POST"
                 action="../controller/assign_controller.php"
@@ -128,9 +284,9 @@ $employees = EmployeeDB::getEmployees();
 
                     <?php foreach ($employees as $employee) : ?>
 
-                        <?php
-                        if ($employee->getLevel() === 'Technician') :
-                        ?>
+                        <?php if (
+                            $employee->getLevel() === 'Technician'
+                        ) : ?>
 
                             <option
                                 value="<?php echo $employee->getEmployeeId(); ?>"

@@ -14,6 +14,8 @@ require_once __DIR__ . '/../model/complaint_db.php';
 require_once __DIR__ . '/../model/product_db.php';
 require_once __DIR__ . '/../model/complaint_type_db.php';
 require_once __DIR__ . '/../model/technician_note_db.php';
+require_once __DIR__ . '/../model/complaint_image_db.php';
+require_once __DIR__ . '/../model/complaint_message_db.php';
 
 $customerId = (int) $_SESSION['customer_id'];
 
@@ -54,6 +56,7 @@ $complaints = ComplaintDB::getComplaintsByCustomer($customerId);
                 <?php foreach ($complaints as $complaint) : ?>
 
                     <?php
+
                     $product = ProductDB::getProduct(
                         $complaint->getProductId()
                     );
@@ -65,9 +68,23 @@ $complaints = ComplaintDB::getComplaintsByCustomer($customerId);
                     $notes = TechnicianNoteDB::getNotesByComplaint(
                         $complaint->getComplaintId()
                     );
+
+                    $images = ComplaintImageDB::getImagesByComplaint(
+                        $complaint->getComplaintId()
+                    );
+
+                    $messages = ComplaintMessageDB::getMessagesByComplaint(
+                        $complaint->getComplaintId()
+                    );
+
                     ?>
 
-                    <div class="complaint">
+                    <div
+                        class="complaint"
+                        id="complaint-<?php
+                        echo $complaint->getComplaintId();
+                        ?>"
+                    >
 
                         <h3>
                             Complaint #
@@ -128,6 +145,33 @@ $complaints = ComplaintDB::getComplaintsByCustomer($customerId);
                             ?>
                         </p>
 
+                        <?php if (count($images) > 0) : ?>
+
+                            <h4>Complaint Image</h4>
+
+                            <?php foreach ($images as $image) : ?>
+
+                                <img
+                                    src="../uploads/complaints/<?php
+                                    echo rawurlencode(
+                                        $image['FileName']
+                                    );
+                                    ?>"
+                                    alt="Complaint Image"
+                                    style="
+                                        max-width: 400px;
+                                        max-height: 400px;
+                                        width: auto;
+                                        height: auto;
+                                        display: block;
+                                        margin: 10px auto;
+                                    "
+                                >
+
+                            <?php endforeach; ?>
+
+                        <?php endif; ?>
+
                         <h4>Technician Notes</h4>
 
                         <?php if (count($notes) === 0) : ?>
@@ -160,13 +204,117 @@ $complaints = ComplaintDB::getComplaintsByCustomer($customerId);
 
                         <?php endif; ?>
 
+
+                        <hr>
+
+                        <h4>Complaint Messages</h4>
+
+                        <?php if (count($messages) === 0) : ?>
+
+                            <p>
+                                No messages have been sent yet.
+                            </p>
+
+                        <?php else : ?>
+
+                            <?php foreach ($messages as $message) : ?>
+
+                                <div class="complaint-message">
+
+                                    <p>
+                                        <strong>
+                                            <?php
+                                            if (
+                                                $message['SenderType']
+                                                === 'Customer'
+                                            ) {
+                                                echo 'You';
+                                            } else {
+                                                echo 'Technician';
+                                            }
+                                            ?>:
+                                        </strong>
+
+                                        <?php
+                                        echo nl2br(
+                                            htmlspecialchars(
+                                                $message['MessageText']
+                                            )
+                                        );
+                                        ?>
+                                    </p>
+
+                                    <small>
+                                        <?php
+                                        echo htmlspecialchars(
+                                            $message['DateCreated']
+                                        );
+                                        ?>
+                                    </small>
+
+                                </div>
+
+                            <?php endforeach; ?>
+
+                        <?php endif; ?>
+
+
+                        <?php if (
+                            $complaint->getStatus() === 'Open'
+                        ) : ?>
+
+                            <h4>Send Message to Technician</h4>
+
+                            <form
+                                method="POST"
+                                action="../controller/complaint_message_controller.php"
+                            >
+
+                                <input
+                                    type="hidden"
+                                    name="complaint_id"
+                                    value="<?php
+                                    echo $complaint->getComplaintId();
+                                    ?>"
+                                >
+
+                                <label
+                                    for="message_text_<?php
+                                    echo $complaint->getComplaintId();
+                                    ?>"
+                                >
+                                    Message
+                                </label>
+
+                                <textarea
+                                    id="message_text_<?php
+                                    echo $complaint->getComplaintId();
+                                    ?>"
+                                    name="message_text"
+                                    rows="4"
+                                    maxlength="2000"
+                                    required
+                                ></textarea>
+
+                                <input
+                                    type="submit"
+                                    value="Send Message"
+                                >
+
+                            </form>
+
+                        <?php endif; ?>
+
                     </div>
 
                 <?php endforeach; ?>
 
             <?php endif; ?>
 
-            <a href="customer_home.php" class="button">
+            <a
+                href="customer_home.php"
+                class="button"
+            >
                 Back to Dashboard
             </a>
 

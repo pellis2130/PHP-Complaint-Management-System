@@ -55,7 +55,10 @@ unset($_SESSION['customer_admin_error']);
 
     <?php endif; ?>
 
-    <form action="../controller/admin_customer_controller.php" method="post">
+    <form
+        action="../controller/admin_customer_controller.php"
+        method="post"
+    >
 
         <input
             type="hidden"
@@ -63,78 +66,153 @@ unset($_SESSION['customer_admin_error']);
             value="<?php echo $customer->getCustomerId(); ?>"
         >
 
-        <label for="email">Email:</label>
+
+        <label for="email">
+            Email:
+        </label>
+
         <input
             type="email"
             id="email"
             name="email"
-            value="<?php echo htmlspecialchars($customer->getEmail()); ?>"
+            maxlength="100"
+            value="<?php
+            echo htmlspecialchars(
+                $customer->getEmail()
+            );
+            ?>"
             required
         >
 
-        <label for="first_name">First Name:</label>
+
+        <label for="first_name">
+            First Name:
+        </label>
+
         <input
             type="text"
             id="first_name"
             name="first_name"
-            value="<?php echo htmlspecialchars($customer->getFirstName()); ?>"
+            maxlength="50"
+            value="<?php
+            echo htmlspecialchars(
+                $customer->getFirstName()
+            );
+            ?>"
             required
         >
 
-        <label for="last_name">Last Name:</label>
+
+        <label for="last_name">
+            Last Name:
+        </label>
+
         <input
             type="text"
             id="last_name"
             name="last_name"
-            value="<?php echo htmlspecialchars($customer->getLastName()); ?>"
+            maxlength="50"
+            value="<?php
+            echo htmlspecialchars(
+                $customer->getLastName()
+            );
+            ?>"
             required
         >
 
-        <label for="street_address">Street Address:</label>
+
+        <label for="street_address">
+            Street Address:
+        </label>
+
         <input
             type="text"
             id="street_address"
             name="street_address"
-            value="<?php echo htmlspecialchars($customer->getStreetAddress()); ?>"
+            maxlength="100"
+            value="<?php
+            echo htmlspecialchars(
+                $customer->getStreetAddress()
+            );
+            ?>"
             required
         >
 
-        <label for="city">City:</label>
+
+        <label for="city">
+            City:
+        </label>
+
         <input
             type="text"
             id="city"
             name="city"
-            value="<?php echo htmlspecialchars($customer->getCity()); ?>"
+            maxlength="50"
+            value="<?php
+            echo htmlspecialchars(
+                $customer->getCity()
+            );
+            ?>"
             required
         >
 
-        <label for="state">State:</label>
+
+        <label for="state">
+            State:
+        </label>
+
         <input
             type="text"
             id="state"
             name="state"
+            minlength="2"
             maxlength="2"
-            value="<?php echo htmlspecialchars($customer->getState()); ?>"
+            value="<?php
+            echo htmlspecialchars(
+                $customer->getState()
+            );
+            ?>"
             required
         >
 
-        <label for="zip_code">ZIP Code:</label>
+
+        <label for="zip_code">
+            ZIP Code:
+        </label>
+
         <input
             type="text"
             id="zip_code"
             name="zip_code"
-            value="<?php echo htmlspecialchars($customer->getZipCode()); ?>"
+            maxlength="10"
+            placeholder="12345 or 12345-6789"
+            value="<?php
+            echo htmlspecialchars(
+                $customer->getZipCode()
+            );
+            ?>"
             required
         >
 
-        <label for="phone_number">Phone Number:</label>
+
+        <label for="phone_number">
+            Phone Number:
+        </label>
+
         <input
             type="text"
             id="phone_number"
             name="phone_number"
-            value="<?php echo htmlspecialchars($customer->getPhoneNumber()); ?>"
+            maxlength="20"
+            placeholder="555-555-5555"
+            value="<?php
+            echo htmlspecialchars(
+                $customer->getPhoneNumber()
+            );
+            ?>"
             required
         >
+
 
         <button type="submit">
             Update Customer
@@ -144,7 +222,10 @@ unset($_SESSION['customer_admin_error']);
 
     <br>
 
-    <a href="admin_users.php" class="button">
+    <a
+        href="admin_users.php"
+        class="button"
+    >
         Back to Users
     </a>
 

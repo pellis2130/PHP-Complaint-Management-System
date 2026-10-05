@@ -12,6 +12,7 @@ if (
 
 require_once __DIR__ . '/../model/employee.php';
 require_once __DIR__ . '/../model/employee_db.php';
+require_once __DIR__ . '/../includes/validation.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: ../view/admin_users.php");
@@ -20,37 +21,147 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $action = $_POST['action'] ?? '';
 
+/*
+ * Make sure the action is valid.
+ */
+if (!in_array($action, ['Add', 'Update'], true)) {
+    header("Location: ../view/admin_users.php");
+    exit;
+}
+
+/*
+ * Set the correct page to return to
+ * if validation fails.
+ */
+$employeeId = 0;
+$formLocation = "../view/admin_employee.php";
+
+if ($action === 'Update') {
+    $employeeId = (int) ($_POST['employee_id'] ?? 0);
+
+    if ($employeeId <= 0) {
+        header("Location: ../view/admin_users.php");
+        exit;
+    }
+
+    $formLocation =
+        "../view/admin_employee.php?id=" . $employeeId;
+}
+
 $firstName = trim($_POST['first_name'] ?? '');
 $lastName = trim($_POST['last_name'] ?? '');
 $email = trim($_POST['email'] ?? '');
 $phoneExtension = trim($_POST['phone_extension'] ?? '');
 $level = $_POST['level'] ?? '';
 
+/*
+ * Validate common employee fields.
+ */
 if (
-    $firstName === '' ||
-    $lastName === '' ||
-    $email === '' ||
-    $phoneExtension === '' ||
-    !filter_var($email, FILTER_VALIDATE_EMAIL) ||
-    !in_array($level, ['Technician', 'Administrator'], true)
+    !validateRequired($firstName) ||
+    !validateRequired($lastName) ||
+    !validateRequired($email) ||
+    !validateRequired($phoneExtension)
 ) {
     $_SESSION['employee_error'] =
-        "Please enter valid information in all fields.";
+        "Please complete all required fields.";
 
-    header("Location: ../view/admin_employee.php");
+    header("Location: " . $formLocation);
     exit;
 }
 
+if (!validateLength($firstName, 1, 50)) {
+    $_SESSION['employee_error'] =
+        "First name must be 50 characters or less.";
+
+    header("Location: " . $formLocation);
+    exit;
+}
+
+if (!validateLength($lastName, 1, 50)) {
+    $_SESSION['employee_error'] =
+        "Last name must be 50 characters or less.";
+
+    header("Location: " . $formLocation);
+    exit;
+}
+
+if (
+    !validateEmail($email) ||
+    !validateLength($email, 5, 100)
+) {
+    $_SESSION['employee_error'] =
+        "Please enter a valid email address.";
+
+    header("Location: " . $formLocation);
+    exit;
+}
+
+/*
+ * Phone extension is VARCHAR(10)
+ * and should contain only numbers.
+ */
+if (
+    !validateLength($phoneExtension, 1, 10) ||
+    !ctype_digit($phoneExtension)
+) {
+    $_SESSION['employee_error'] =
+        "Phone extension must contain only numbers and " .
+        "be 10 digits or less.";
+
+    header("Location: " . $formLocation);
+    exit;
+}
+
+if (
+    !in_array(
+        $level,
+        ['Technician', 'Administrator'],
+        true
+    )
+) {
+    $_SESSION['employee_error'] =
+        "Please select a valid employee level.";
+
+    header("Location: " . $formLocation);
+    exit;
+}
+
+
+/*
+ * Add employee.
+ */
 if ($action === 'Add') {
 
     $userId = trim($_POST['user_id'] ?? '');
     $password = $_POST['password'] ?? '';
 
-    if ($userId === '' || $password === '') {
+    if (
+        !validateRequired($userId) ||
+        !validateRequired($password)
+    ) {
         $_SESSION['employee_error'] =
             "User ID and password are required.";
 
-        header("Location: ../view/admin_employee.php");
+        header("Location: " . $formLocation);
+        exit;
+    }
+
+    if (!validateLength($userId, 1, 50)) {
+        $_SESSION['employee_error'] =
+            "User ID must be 50 characters or less.";
+
+        header("Location: " . $formLocation);
+        exit;
+    }
+
+    if (!validatePassword($password)) {
+        $_SESSION['employee_error'] =
+            "Password must be at least 8 characters and " .
+            "include an uppercase letter, lowercase letter, " .
+            "number, and special character.";
+
+        header("Location: " . $formLocation);
         exit;
     }
 
@@ -58,7 +169,7 @@ if ($action === 'Add') {
         $_SESSION['employee_error'] =
             "That User ID is already being used.";
 
-        header("Location: ../view/admin_employee.php");
+        header("Location: " . $formLocation);
         exit;
     }
 
@@ -66,7 +177,7 @@ if ($action === 'Add') {
         $_SESSION['employee_error'] =
             "That email address is already being used.";
 
-        header("Location: ../view/admin_employee.php");
+        header("Location: " . $formLocation);
         exit;
     }
 
@@ -88,23 +199,28 @@ if ($action === 'Add') {
 
     EmployeeDB::addEmployee($employee);
 
-    header("Location: ../view/admin_users.php?added=1");
+    header(
+        "Location: ../view/admin_users.php?added=1"
+    );
     exit;
 }
 
 
+/*
+ * Update employee.
+ */
 if ($action === 'Update') {
 
-    $employeeId = (int) ($_POST['employee_id'] ?? 0);
-
-    $currentEmployee = EmployeeDB::getEmployee($employeeId);
+    $currentEmployee =
+        EmployeeDB::getEmployee($employeeId);
 
     if (!$currentEmployee) {
         header("Location: ../view/admin_users.php");
         exit;
     }
 
-    $emailEmployee = EmployeeDB::getEmployeeByEmail($email);
+    $emailEmployee =
+        EmployeeDB::getEmployeeByEmail($email);
 
     if (
         $emailEmployee &&
@@ -113,10 +229,7 @@ if ($action === 'Update') {
         $_SESSION['employee_error'] =
             "That email address is already being used.";
 
-        header(
-            "Location: ../view/admin_employee.php?id=" .
-            $employeeId
-        );
+        header("Location: " . $formLocation);
         exit;
     }
 
@@ -133,7 +246,9 @@ if ($action === 'Update') {
 
     EmployeeDB::updateEmployee($employee);
 
-    header("Location: ../view/admin_users.php?updated=1");
+    header(
+        "Location: ../view/admin_users.php?updated=1"
+    );
     exit;
 }
 

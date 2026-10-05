@@ -50,6 +50,72 @@ $employees = EmployeeDB::getEmployees();
     <?php endif; ?>
 
 
+    <h2>Technician Workload</h2>
+
+    <?php
+
+    $technicianFound = false;
+
+    foreach ($employees as $employee) :
+
+        if ($employee->getLevel() !== 'Technician') {
+            continue;
+        }
+
+        $technicianFound = true;
+        $openCount = 0;
+
+        foreach ($complaints as $complaint) {
+
+            if (
+                $complaint->getStatus() === 'Open' &&
+                $complaint->getTechnicianId() ==
+                $employee->getEmployeeId()
+            ) {
+                $openCount++;
+            }
+        }
+
+    ?>
+
+        <div class="complaint">
+
+            <p>
+                <strong>Technician:</strong>
+
+                <?php
+                echo htmlspecialchars(
+                    $employee->getFirstName() .
+                    " " .
+                    $employee->getLastName()
+                );
+                ?>
+            </p>
+
+            <p>
+                <strong>Open Complaints Assigned:</strong>
+
+                <?php
+                echo $openCount;
+                ?>
+            </p>
+
+        </div>
+
+    <?php endforeach; ?>
+
+    <?php if (!$technicianFound) : ?>
+
+        <p>
+            There are currently no technicians.
+        </p>
+
+    <?php endif; ?>
+
+
+    <hr>
+
+
     <h2>Unassigned Open Complaints</h2>
 
     <?php if (count($unassignedComplaints) === 0) : ?>
@@ -78,37 +144,51 @@ $employees = EmployeeDB::getEmployees();
 
                 <h3>
                     Complaint #
-                    <?php echo htmlspecialchars(
+                    <?php
+                    echo htmlspecialchars(
                         $complaint->getComplaintId()
-                    ); ?>
+                    );
+                    ?>
                 </h3>
 
                 <p>
                     <strong>Product/Service:</strong>
-                    <?php echo htmlspecialchars(
+
+                    <?php
+                    echo htmlspecialchars(
                         $product->getProductName()
-                    ); ?>
+                    );
+                    ?>
                 </p>
 
                 <p>
                     <strong>Complaint Type:</strong>
-                    <?php echo htmlspecialchars(
+
+                    <?php
+                    echo htmlspecialchars(
                         $type->getTypeName()
-                    ); ?>
+                    );
+                    ?>
                 </p>
 
                 <p>
                     <strong>Description:</strong>
-                    <?php echo htmlspecialchars(
+
+                    <?php
+                    echo htmlspecialchars(
                         $complaint->getDescription()
-                    ); ?>
+                    );
+                    ?>
                 </p>
 
                 <p>
                     <strong>Status:</strong>
-                    <?php echo htmlspecialchars(
+
+                    <?php
+                    echo htmlspecialchars(
                         $complaint->getStatus()
-                    ); ?>
+                    );
+                    ?>
                 </p>
 
                 <form
@@ -119,14 +199,19 @@ $employees = EmployeeDB::getEmployees();
                     <input
                         type="hidden"
                         name="complaint_id"
-                        value="<?php echo $complaint->getComplaintId(); ?>"
+                        value="<?php
+                        echo $complaint->getComplaintId();
+                        ?>"
                     >
 
                     <label>
                         Assign Technician
                     </label>
 
-                    <select name="technician_id" required>
+                    <select
+                        name="technician_id"
+                        required
+                    >
 
                         <option value="">
                             Select Technician
@@ -135,11 +220,14 @@ $employees = EmployeeDB::getEmployees();
                         <?php foreach ($employees as $employee) : ?>
 
                             <?php if (
-                                $employee->getLevel() === 'Technician'
+                                $employee->getLevel() ===
+                                'Technician'
                             ) : ?>
 
                                 <option
-                                    value="<?php echo $employee->getEmployeeId(); ?>"
+                                    value="<?php
+                                    echo $employee->getEmployeeId();
+                                    ?>"
                                 >
                                     <?php
                                     echo htmlspecialchars(
@@ -201,37 +289,51 @@ $employees = EmployeeDB::getEmployees();
 
             <h3>
                 Complaint #
-                <?php echo htmlspecialchars(
+                <?php
+                echo htmlspecialchars(
                     $complaint->getComplaintId()
-                ); ?>
+                );
+                ?>
             </h3>
 
             <p>
                 <strong>Product/Service:</strong>
-                <?php echo htmlspecialchars(
+
+                <?php
+                echo htmlspecialchars(
                     $product->getProductName()
-                ); ?>
+                );
+                ?>
             </p>
 
             <p>
                 <strong>Complaint Type:</strong>
-                <?php echo htmlspecialchars(
+
+                <?php
+                echo htmlspecialchars(
                     $type->getTypeName()
-                ); ?>
+                );
+                ?>
             </p>
 
             <p>
                 <strong>Description:</strong>
-                <?php echo htmlspecialchars(
+
+                <?php
+                echo htmlspecialchars(
                     $complaint->getDescription()
-                ); ?>
+                );
+                ?>
             </p>
 
             <p>
                 <strong>Status:</strong>
-                <?php echo htmlspecialchars(
+
+                <?php
+                echo htmlspecialchars(
                     $complaint->getStatus()
-                ); ?>
+                );
+                ?>
             </p>
 
             <p>
@@ -241,19 +343,26 @@ $employees = EmployeeDB::getEmployees();
 
                 if ($complaint->getTechnicianId()) {
 
-                    $assignedEmployee = EmployeeDB::getEmployee(
-                        $complaint->getTechnicianId()
-                    );
+                    $assignedEmployee =
+                        EmployeeDB::getEmployee(
+                            $complaint->getTechnicianId()
+                        );
 
                     if ($assignedEmployee) {
+
                         echo htmlspecialchars(
                             $assignedEmployee->getFirstName() .
                             " " .
                             $assignedEmployee->getLastName()
                         );
+
+                    } else {
+
+                        echo "Not Assigned";
                     }
 
                 } else {
+
                     echo "Not Assigned";
                 }
 
@@ -269,14 +378,19 @@ $employees = EmployeeDB::getEmployees();
                 <input
                     type="hidden"
                     name="complaint_id"
-                    value="<?php echo $complaint->getComplaintId(); ?>"
+                    value="<?php
+                    echo $complaint->getComplaintId();
+                    ?>"
                 >
 
                 <label>
                     Assign Technician
                 </label>
 
-                <select name="technician_id" required>
+                <select
+                    name="technician_id"
+                    required
+                >
 
                     <option value="">
                         Select Technician
@@ -285,11 +399,14 @@ $employees = EmployeeDB::getEmployees();
                     <?php foreach ($employees as $employee) : ?>
 
                         <?php if (
-                            $employee->getLevel() === 'Technician'
+                            $employee->getLevel() ===
+                            'Technician'
                         ) : ?>
 
                             <option
-                                value="<?php echo $employee->getEmployeeId(); ?>"
+                                value="<?php
+                                echo $employee->getEmployeeId();
+                                ?>"
                             >
                                 <?php
                                 echo htmlspecialchars(
@@ -317,6 +434,7 @@ $employees = EmployeeDB::getEmployees();
 
     <?php endforeach; ?>
 
+
     <?php if (!$openComplaintFound) : ?>
 
         <p>
@@ -325,7 +443,11 @@ $employees = EmployeeDB::getEmployees();
 
     <?php endif; ?>
 
-    <a href="admin_home.php" class="button">
+
+    <a
+        href="admin_home.php"
+        class="button"
+    >
         Back to Dashboard
     </a>
 

@@ -4,6 +4,7 @@ session_start();
 
 require_once __DIR__ . '/../model/employee.php';
 require_once __DIR__ . '/../model/employee_db.php';
+require_once __DIR__ . '/../includes/validation.php';
 
 if (!isset($_SESSION['employee_id'])) {
     header("Location: ../view/login.php");
@@ -16,16 +17,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $newPassword = $_POST['new_password'] ?? '';
     $confirmPassword = $_POST['confirm_password'] ?? '';
 
+    /*
+     * Make sure all password fields are completed.
+     */
     if (
-        $currentPassword === '' ||
-        $newPassword === '' ||
-        $confirmPassword === ''
+        !validateRequired($currentPassword) ||
+        !validateRequired($newPassword) ||
+        !validateRequired($confirmPassword)
     ) {
-        header("Location: ../view/change_password.php?error=empty");
+        header(
+            "Location: ../view/change_password.php?error=empty"
+        );
         exit;
     }
 
-    $employeeId = $_SESSION['employee_id'];
+    $employeeId = (int) $_SESSION['employee_id'];
 
     $employee = EmployeeDB::getEmployee($employeeId);
 
@@ -34,16 +40,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    if (!password_verify(
-        $currentPassword,
-        $employee->getPassword()
-    )) {
-        header("Location: ../view/change_password.php?error=current");
+    /*
+     * Verify the employee's current password.
+     */
+    if (
+        !password_verify(
+            $currentPassword,
+            $employee->getPassword()
+        )
+    ) {
+        header(
+            "Location: ../view/change_password.php?error=current"
+        );
         exit;
     }
 
+    /*
+     * Make sure the new passwords match.
+     */
     if ($newPassword !== $confirmPassword) {
-        header("Location: ../view/change_password.php?error=match");
+        header(
+            "Location: ../view/change_password.php?error=match"
+        );
+        exit;
+    }
+
+    /*
+     * New password must meet complexity requirements.
+     */
+    if (!validatePassword($newPassword)) {
+        header(
+            "Location: ../view/change_password.php?error=complexity"
+        );
+        exit;
+    }
+
+    /*
+     * Do not allow the current password to be reused.
+     */
+    if (
+        password_verify(
+            $newPassword,
+            $employee->getPassword()
+        )
+    ) {
+        header(
+            "Location: ../view/change_password.php?error=same"
+        );
         exit;
     }
 
@@ -57,7 +100,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $hashedPassword
     );
 
-    header("Location: ../view/change_password.php?success=1");
+    header(
+        "Location: ../view/change_password.php?success=1"
+    );
     exit;
 }
 

@@ -68,7 +68,10 @@ unset($_SESSION['employee_error']);
 
     <?php endif; ?>
 
-    <form action="../controller/employee_controller.php" method="post">
+    <form
+        action="../controller/employee_controller.php"
+        method="post"
+    >
 
         <input
             type="hidden"
@@ -86,16 +89,29 @@ unset($_SESSION['employee_error']);
 
         <?php endif; ?>
 
-        <label for="user_id">User ID:</label>
+
+        <label for="user_id">
+            User ID:
+        </label>
 
         <?php if ($editing) : ?>
 
             <input
                 type="text"
                 id="user_id"
-                value="<?php echo htmlspecialchars($employee->getUserId()); ?>"
+                maxlength="50"
+                value="<?php
+                echo htmlspecialchars(
+                    $employee->getUserId()
+                );
+                ?>"
                 disabled
             >
+
+            <small>
+                User ID cannot be changed after the employee
+                account is created.
+            </small>
 
         <?php else : ?>
 
@@ -103,77 +119,101 @@ unset($_SESSION['employee_error']);
                 type="text"
                 id="user_id"
                 name="user_id"
+                maxlength="50"
                 required
             >
 
         <?php endif; ?>
 
 
-        <label for="first_name">First Name:</label>
+        <label for="first_name">
+            First Name:
+        </label>
 
         <input
             type="text"
             id="first_name"
             name="first_name"
+            maxlength="50"
             value="<?php
-                echo $editing
-                    ? htmlspecialchars($employee->getFirstName())
-                    : '';
+            echo $editing
+                ? htmlspecialchars($employee->getFirstName())
+                : '';
             ?>"
             required
         >
 
 
-        <label for="last_name">Last Name:</label>
+        <label for="last_name">
+            Last Name:
+        </label>
 
         <input
             type="text"
             id="last_name"
             name="last_name"
+            maxlength="50"
             value="<?php
-                echo $editing
-                    ? htmlspecialchars($employee->getLastName())
-                    : '';
+            echo $editing
+                ? htmlspecialchars($employee->getLastName())
+                : '';
             ?>"
             required
         >
 
 
-        <label for="email">Email:</label>
+        <label for="email">
+            Email:
+        </label>
 
         <input
             type="email"
             id="email"
             name="email"
+            maxlength="100"
             value="<?php
-                echo $editing
-                    ? htmlspecialchars($employee->getEmail())
-                    : '';
+            echo $editing
+                ? htmlspecialchars($employee->getEmail())
+                : '';
             ?>"
             required
         >
 
 
-        <label for="phone_extension">Phone Extension:</label>
+        <label for="phone_extension">
+            Phone Extension:
+        </label>
 
         <input
             type="text"
             id="phone_extension"
             name="phone_extension"
+            maxlength="10"
+            inputmode="numeric"
             value="<?php
-                echo $editing
-                    ? htmlspecialchars($employee->getPhoneExtension())
-                    : '';
+            echo $editing
+                ? htmlspecialchars(
+                    $employee->getPhoneExtension()
+                )
+                : '';
             ?>"
             required
         >
 
 
-        <label for="level">Employee Level:</label>
+        <label for="level">
+            Employee Level:
+        </label>
 
-        <select id="level" name="level" required>
+        <select
+            id="level"
+            name="level"
+            required
+        >
 
-            <option value="">Select Level</option>
+            <option value="">
+                Select Level
+            </option>
 
             <option
                 value="Technician"
@@ -208,27 +248,43 @@ unset($_SESSION['employee_error']);
 
         <?php if (!$editing) : ?>
 
-            <label for="password">Temporary Password:</label>
+            <label for="password">
+                Temporary Password:
+            </label>
 
             <input
                 type="password"
                 id="password"
                 name="password"
+                minlength="8"
                 required
             >
+
+            <small>
+                Password must be at least 8 characters and include
+                an uppercase letter, lowercase letter, number, and
+                special character.
+            </small>
 
         <?php endif; ?>
 
 
         <button type="submit">
-            <?php echo $editing ? 'Update Employee' : 'Add Employee'; ?>
+            <?php
+            echo $editing
+                ? 'Update Employee'
+                : 'Add Employee';
+            ?>
         </button>
 
     </form>
 
     <br>
 
-    <a href="admin_users.php" class="button">
+    <a
+        href="admin_users.php"
+        class="button"
+    >
         Back to Users
     </a>
 

@@ -12,7 +12,9 @@ if (
 
 require_once __DIR__ . '/../model/complaint_type_db.php';
 
-$complaintTypes = ComplaintTypeDB::getComplaintTypes();
+// Only show active complaint types
+$complaintTypes =
+    ComplaintTypeDB::getComplaintTypes();
 
 ?>
 
@@ -38,29 +40,70 @@ $complaintTypes = ComplaintTypeDB::getComplaintTypes();
 
     <h2>Complaint Types</h2>
 
+
     <?php if (isset($_GET['added'])) : ?>
+
         <p class="success">
             Complaint type added successfully.
         </p>
+
     <?php endif; ?>
 
-    <?php if (isset($_GET['deleted'])) : ?>
+
+    <?php if (isset($_GET['removed'])) : ?>
+
         <p class="success">
             Complaint type removed successfully.
         </p>
+
     <?php endif; ?>
 
+
     <?php if (isset($_GET['error'])) : ?>
+
         <p class="error">
-            Please complete all required fields.
+
+            <?php
+
+            $error = $_GET['error'];
+
+            if ($error === 'required') {
+
+                echo "Please complete all required fields.";
+
+            } elseif ($error === 'name_length') {
+
+                echo "Complaint type name is too long.";
+
+            } elseif ($error === 'description_length') {
+
+                echo "Description must be 2,000 characters or less.";
+
+            } elseif ($error === 'database') {
+
+                echo "The complaint type could not be saved.";
+
+            } else {
+
+                echo "The complaint type could not be processed.";
+
+            }
+
+            ?>
+
         </p>
+
     <?php endif; ?>
+
 
     <?php if (count($complaintTypes) === 0) : ?>
 
-        <p>No complaint types found.</p>
+        <p>
+            No complaint types found.
+        </p>
 
     <?php else : ?>
+
 
         <?php foreach ($complaintTypes as $type) : ?>
 
@@ -68,6 +111,7 @@ $complaintTypes = ComplaintTypeDB::getComplaintTypes();
 
                 <p>
                     <strong>Type:</strong>
+
                     <?php
                     echo htmlspecialchars(
                         $type->getTypeName()
@@ -75,8 +119,10 @@ $complaintTypes = ComplaintTypeDB::getComplaintTypes();
                     ?>
                 </p>
 
+
                 <p>
                     <strong>Description:</strong>
+
                     <?php
                     echo htmlspecialchars(
                         $type->getDescription()
@@ -84,15 +130,6 @@ $complaintTypes = ComplaintTypeDB::getComplaintTypes();
                     ?>
                 </p>
 
-                <p>
-                    <strong>Status:</strong>
-
-                    <?php if ($type->getActive()) : ?>
-                        Active
-                    <?php else : ?>
-                        Inactive
-                    <?php endif; ?>
-                </p>
 
                 <form
                     method="POST"
@@ -102,7 +139,11 @@ $complaintTypes = ComplaintTypeDB::getComplaintTypes();
                     <input
                         type="hidden"
                         name="complaint_type_id"
-                        value="<?php echo $type->getComplaintTypeId(); ?>"
+                        value="<?php
+                        echo htmlspecialchars(
+                            $type->getComplaintTypeId()
+                        );
+                        ?>"
                     >
 
                     <input
@@ -119,7 +160,9 @@ $complaintTypes = ComplaintTypeDB::getComplaintTypes();
 
     <?php endif; ?>
 
+
     <hr>
+
 
     <h2>Add Complaint Type</h2>
 
@@ -136,8 +179,10 @@ $complaintTypes = ComplaintTypeDB::getComplaintTypes();
             type="text"
             id="type_name"
             name="type_name"
+            maxlength="100"
             required
         >
+
 
         <label for="description">
             Description
@@ -147,8 +192,14 @@ $complaintTypes = ComplaintTypeDB::getComplaintTypes();
             id="description"
             name="description"
             rows="4"
+            maxlength="2000"
             required
         ></textarea>
+
+        <small>
+            Maximum 2,000 characters.
+        </small>
+
 
         <input
             type="submit"
@@ -158,7 +209,11 @@ $complaintTypes = ComplaintTypeDB::getComplaintTypes();
 
     </form>
 
-    <a href="admin_home.php" class="button">
+
+    <a
+        href="admin_home.php"
+        class="button"
+    >
         Back to Dashboard
     </a>
 

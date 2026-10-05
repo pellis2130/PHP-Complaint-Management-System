@@ -28,99 +28,146 @@ if (
 
 <body>
 
-    <header>
-        <h1>Complaint Management System</h1>
-        <p>Change Password</p>
-    </header>
+<header>
+    <h1>Complaint Management System</h1>
+    <p>Change Password</p>
+</header>
 
-    <main>
+<main>
 
-        <section class="card">
+<section class="card">
 
-            <h2>Change Password</h2>
+    <h2>Change Password</h2>
 
-            <?php if (isset($_GET['success'])) : ?>
-                <p class="success">
-                    Your password was changed successfully.
-                </p>
-            <?php endif; ?>
+    <?php if (isset($_GET['success'])) : ?>
 
-            <?php if (isset($_GET['error'])) : ?>
-                <p class="error">
-                    <?php
-                    if ($_GET['error'] === 'current') {
-                        echo "Your current password is incorrect.";
-                    } elseif ($_GET['error'] === 'match') {
-                        echo "Your new passwords do not match.";
-                    } else {
-                        echo "Please complete all fields.";
-                    }
-                    ?>
-                </p>
-            <?php endif; ?>
+        <p class="success">
+            Your password was changed successfully.
+        </p>
 
-            <form
-                method="POST"
-                action="../controller/password_controller.php"
-            >
+    <?php endif; ?>
 
-                <label for="current_password">
-                    Current Password
-                </label>
 
-                <input
-                    type="password"
-                    id="current_password"
-                    name="current_password"
-                    required
-                >
+    <?php if (isset($_GET['error'])) : ?>
 
-                <label for="new_password">
-                    New Password
-                </label>
+        <p class="error">
 
-                <input
-                    type="password"
-                    id="new_password"
-                    name="new_password"
-                    required
-                >
+            <?php
 
-                <label for="confirm_password">
-                    Confirm New Password
-                </label>
+            $error = $_GET['error'];
 
-                <input
-                    type="password"
-                    id="confirm_password"
-                    name="confirm_password"
-                    required
-                >
+            if ($error === 'current') {
 
-                <input
-                    type="submit"
-                    value="Change Password"
-                >
+                echo "Your current password is incorrect.";
 
-            </form>
+            } elseif ($error === 'match') {
 
-            <?php if ($_SESSION['user_type'] === 'Administrator') : ?>
+                echo "Your new passwords do not match.";
 
-                <a href="admin_home.php" class="button">
-                    Back to Dashboard
-                </a>
+            } elseif ($error === 'complexity') {
 
-            <?php else : ?>
+                echo "Your new password must be at least 8 " .
+                     "characters and include an uppercase letter, " .
+                     "lowercase letter, number, and special character.";
 
-                <a href="technician_home.php" class="button">
-                    Back to Dashboard
-                </a>
+            } elseif ($error === 'same') {
 
-            <?php endif; ?>
+                echo "Your new password must be different from " .
+                     "your current password.";
 
-        </section>
+            } else {
 
-    </main>
+                echo "Please complete all fields.";
+
+            }
+
+            ?>
+
+        </p>
+
+    <?php endif; ?>
+
+
+    <form
+        method="POST"
+        action="../controller/password_controller.php"
+    >
+
+        <label for="current_password">
+            Current Password
+        </label>
+
+        <input
+            type="password"
+            id="current_password"
+            name="current_password"
+            required
+        >
+
+
+        <label for="new_password">
+            New Password
+        </label>
+
+        <input
+            type="password"
+            id="new_password"
+            name="new_password"
+            minlength="8"
+            required
+        >
+
+        <small>
+            Password must be at least 8 characters and include
+            an uppercase letter, lowercase letter, number, and
+            special character.
+        </small>
+
+
+        <label for="confirm_password">
+            Confirm New Password
+        </label>
+
+        <input
+            type="password"
+            id="confirm_password"
+            name="confirm_password"
+            minlength="8"
+            required
+        >
+
+
+        <input
+            type="submit"
+            value="Change Password"
+        >
+
+    </form>
+
+
+    <?php if ($_SESSION['user_type'] === 'Administrator') : ?>
+
+        <a
+            href="admin_home.php"
+            class="button"
+        >
+            Back to Dashboard
+        </a>
+
+    <?php else : ?>
+
+        <a
+            href="technician_home.php"
+            class="button"
+        >
+            Back to Dashboard
+        </a>
+
+    <?php endif; ?>
+
+</section>
+
+</main>
 
 </body>
 

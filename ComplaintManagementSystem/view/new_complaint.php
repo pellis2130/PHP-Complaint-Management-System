@@ -29,131 +29,215 @@ $complaintTypes = ComplaintTypeDB::getComplaintTypes();
 
 <body>
 
-    <header>
-        <h1>Complaint Management System</h1>
-        <p>Submit a Complaint</p>
-    </header>
+<header>
+    <h1>Complaint Management System</h1>
+    <p>Submit a Complaint</p>
+</header>
 
-    <main>
+<main>
 
-        <section class="card">
+<section class="card">
 
-            <h2>New Complaint</h2>
+    <h2>New Complaint</h2>
 
-            <p>
-                Please provide the information about your complaint below.
-            </p>
+    <p>
+        Please provide the information about your complaint below.
+    </p>
 
-            <?php if (isset($_GET['success'])) : ?>
-                <p class="success">
-                    Your complaint was submitted successfully.
-                </p>
+
+    <?php if (isset($_GET['success'])) : ?>
+
+        <p class="success">
+            Your complaint was submitted successfully.
+        </p>
+
+    <?php endif; ?>
+
+
+    <?php if (isset($_GET['error'])) : ?>
+
+        <p class="error">
+
+            <?php if ($_GET['error'] === 'description') : ?>
+
+                Complaint description must be 2,000
+                characters or less.
+
+            <?php else : ?>
+
+                Please complete all required fields.
+
             <?php endif; ?>
 
-            <?php if (isset($_GET['error'])) : ?>
-                <p class="error">
-                    Please complete all required fields.
-                </p>
+        </p>
+
+    <?php endif; ?>
+
+
+    <?php if (isset($_GET['image_error'])) : ?>
+
+        <p class="error">
+
+            <?php if ($_GET['image_error'] === 'size') : ?>
+
+                The image is too large.
+                Please upload an image smaller than 5 MB.
+
+            <?php elseif ($_GET['image_error'] === 'type') : ?>
+
+                Please upload a JPG, JPEG, PNG,
+                or GIF image.
+
+            <?php elseif ($_GET['image_error'] === 'upload') : ?>
+
+                The image could not be uploaded.
+                Please try again.
+
+            <?php elseif ($_GET['image_error'] === 'save') : ?>
+
+                The image could not be saved.
+                Please try again.
+
             <?php endif; ?>
 
-            <form method="POST"
-                  action="../controller/complaint_controller.php">
+        </p>
 
-                <label for="product_id">
-                    Product or Service
-                </label>
+    <?php endif; ?>
 
-                <select
-                    id="product_id"
-                    name="product_id"
-                    required
-                >
-                    <option value="">
-                        Select a product or service
+
+    <form
+        method="POST"
+        action="../controller/complaint_controller.php"
+        enctype="multipart/form-data"
+    >
+
+        <label for="product_id">
+            Product or Service
+        </label>
+
+        <select
+            id="product_id"
+            name="product_id"
+            required
+        >
+
+            <option value="">
+                Select a product or service
+            </option>
+
+            <?php foreach ($products as $product) : ?>
+
+                <?php if ($product->getActive()) : ?>
+
+                    <option
+                        value="<?php
+                        echo $product->getProductId();
+                        ?>"
+                    >
+                        <?php
+                        echo htmlspecialchars(
+                            $product->getProductName()
+                        );
+                        ?>
                     </option>
 
-                    <?php foreach ($products as $product) : ?>
+                <?php endif; ?>
 
-                        <?php if ($product->getActive()) : ?>
+            <?php endforeach; ?>
 
-                            <option
-                                value="<?php echo $product->getProductId(); ?>"
-                            >
-                                <?php
-                                echo htmlspecialchars(
-                                    $product->getProductName()
-                                );
-                                ?>
-                            </option>
-
-                        <?php endif; ?>
-
-                    <?php endforeach; ?>
-
-                </select>
+        </select>
 
 
-                <label for="complaint_type_id">
-                    Complaint Type
-                </label>
+        <label for="complaint_type_id">
+            Complaint Type
+        </label>
 
-                <select
-                    id="complaint_type_id"
-                    name="complaint_type_id"
-                    required
-                >
-                    <option value="">
-                        Select a complaint type
+        <select
+            id="complaint_type_id"
+            name="complaint_type_id"
+            required
+        >
+
+            <option value="">
+                Select a complaint type
+            </option>
+
+            <?php foreach ($complaintTypes as $type) : ?>
+
+                <?php if ($type->getActive()) : ?>
+
+                    <option
+                        value="<?php
+                        echo $type->getComplaintTypeId();
+                        ?>"
+                    >
+                        <?php
+                        echo htmlspecialchars(
+                            $type->getTypeName()
+                        );
+                        ?>
                     </option>
 
-                    <?php foreach ($complaintTypes as $type) : ?>
+                <?php endif; ?>
 
-                        <?php if ($type->getActive()) : ?>
+            <?php endforeach; ?>
 
-                            <option
-                                value="<?php echo $type->getComplaintTypeId(); ?>"
-                            >
-                                <?php
-                                echo htmlspecialchars(
-                                    $type->getTypeName()
-                                );
-                                ?>
-                            </option>
-
-                        <?php endif; ?>
-
-                    <?php endforeach; ?>
-
-                </select>
+        </select>
 
 
-                <label for="description">
-                    Complaint Description
-                </label>
+        <label for="description">
+            Complaint Description
+        </label>
 
-                <textarea
-                    id="description"
-                    name="description"
-                    rows="6"
-                    required
-                    placeholder="Describe the problem you are experiencing..."
-                ></textarea>
+        <textarea
+            id="description"
+            name="description"
+            rows="6"
+            maxlength="2000"
+            required
+            placeholder="Describe the problem you are experiencing..."
+        ></textarea>
+
+        <small>
+            Maximum 2,000 characters.
+        </small>
 
 
-                <input
-                    type="submit"
-                    value="Submit Complaint"
-                >
+        <label for="complaint_image">
+            Complaint Image
+        </label>
 
-            </form>
+        <input
+            type="file"
+            id="complaint_image"
+            name="complaint_image"
+            accept=".jpg,.jpeg,.png,.gif"
+        >
 
-            <a href="customer_home.php" class="button">
-                Back to Dashboard
-            </a>
+        <small>
+            Optional. JPG, JPEG, PNG, or GIF images only.
+            Maximum file size is 5 MB.
+        </small>
 
-        </section>
 
-    </main>
+        <input
+            type="submit"
+            value="Submit Complaint"
+        >
+
+    </form>
+
+
+    <a
+        href="customer_home.php"
+        class="button"
+    >
+        Back to Dashboard
+    </a>
+
+</section>
+
+</main>
 
 </body>
 

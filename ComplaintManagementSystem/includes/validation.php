@@ -9,7 +9,8 @@ function validateLength($value, $min, $max)
 {
     $length = strlen(trim($value));
 
-    return $length >= $min && $length <= $max;
+    return $length >= $min &&
+           $length <= $max;
 }
 
 function validateEmail($email)
@@ -22,17 +23,29 @@ function validateEmail($email)
 
 function validatePhone($phone)
 {
-    return preg_match(
-        '/^[0-9\-\(\) ]{7,20}$/',
-        $phone
-    );
+    $phone = trim($phone);
+
+    if (
+        strlen($phone) < 7 ||
+        strlen($phone) > 20
+    ) {
+        return false;
+    }
+
+    if (!preg_match('/^[0-9\-\(\)\+\s]+$/', $phone)) {
+        return false;
+    }
+
+    $digits = preg_replace('/\D/', '', $phone);
+
+    return strlen($digits) >= 7;
 }
 
 function validateZip($zip)
 {
     return preg_match(
         '/^\d{5}(-\d{4})?$/',
-        $zip
+        trim($zip)
     );
 }
 

@@ -9,69 +9,176 @@
 
 <body>
 
-    <header>
-        <h1>Complaint Management System</h1>
-        <p>Create Customer Account</p>
-    </header>
+<header>
+    <h1>Complaint Management System</h1>
+    <p>Create Customer Account</p>
+</header>
 
-    <main>
+<main>
 
-        <section class="card">
+<section class="card">
 
-            <h2>Register</h2>
+    <h2>Register</h2>
 
-            <?php if (isset($error)) : ?>
-                <p><?php echo htmlspecialchars($error); ?></p>
-            <?php endif; ?>
+    <?php if (isset($error)) : ?>
 
-            <form method="POST" action="../controller/customer_controller.php">
+        <p class="error">
+            <?php echo htmlspecialchars($error); ?>
+        </p>
 
-                <label>Email Address</label>
-                <input type="email" name="email" required>
+    <?php endif; ?>
 
-                <label>First Name</label>
-                <input type="text" name="first_name" required>
 
-                <label>Last Name</label>
-                <input type="text" name="last_name" required>
+    <form
+        method="POST"
+        action="../controller/customer_controller.php"
+    >
 
-                <label>Street Address</label>
-                <input type="text" name="street_address" required>
+        <label for="email">
+            Email Address
+        </label>
 
-                <label>City</label>
-                <input type="text" name="city" required>
+        <input
+            type="email"
+            id="email"
+            name="email"
+            maxlength="100"
+            required
+        >
 
-                <label>State</label>
-                <input
-                    type="text"
-                    name="state"
-                    maxlength="2"
-                    required
-                >
 
-                <label>Zip Code</label>
-                <input type="text" name="zip_code" required>
+        <label for="first_name">
+            First Name
+        </label>
 
-                <label>Phone Number</label>
-                <input type="text" name="phone_number" required>
+        <input
+            type="text"
+            id="first_name"
+            name="first_name"
+            maxlength="50"
+            required
+        >
 
-                <label>Password</label>
-                <input type="password" name="password" required>
 
-                <input
-                    type="submit"
-                    value="Create Account"
-                >
+        <label for="last_name">
+            Last Name
+        </label>
 
-            </form>
+        <input
+            type="text"
+            id="last_name"
+            name="last_name"
+            maxlength="50"
+            required
+        >
 
-            <a href="../index.php" class="button">
-                Back
-            </a>
 
-        </section>
+        <label for="street_address">
+            Street Address
+        </label>
 
-    </main>
+        <input
+            type="text"
+            id="street_address"
+            name="street_address"
+            maxlength="100"
+            required
+        >
+
+
+        <label for="city">
+            City
+        </label>
+
+        <input
+            type="text"
+            id="city"
+            name="city"
+            maxlength="50"
+            required
+        >
+
+
+        <label for="state">
+            State
+        </label>
+
+        <input
+            type="text"
+            id="state"
+            name="state"
+            minlength="2"
+            maxlength="2"
+            placeholder="VA"
+            required
+        >
+
+
+        <label for="zip_code">
+            ZIP Code
+        </label>
+
+        <input
+            type="text"
+            id="zip_code"
+            name="zip_code"
+            maxlength="10"
+            placeholder="12345 or 12345-6789"
+            required
+        >
+
+
+        <label for="phone_number">
+            Phone Number
+        </label>
+
+        <input
+            type="text"
+            id="phone_number"
+            name="phone_number"
+            maxlength="20"
+            placeholder="555-555-5555"
+            required
+        >
+
+
+        <label for="password">
+            Password
+        </label>
+
+        <input
+            type="password"
+            id="password"
+            name="password"
+            minlength="8"
+            required
+        >
+
+        <small>
+            Password must be at least 8 characters and include
+            an uppercase letter, lowercase letter, number, and
+            special character.
+        </small>
+
+
+        <input
+            type="submit"
+            value="Create Account"
+        >
+
+    </form>
+
+
+    <a
+        href="../index.php"
+        class="button"
+    >
+        Back
+    </a>
+
+</section>
+
+</main>
 
 </body>
 

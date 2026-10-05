@@ -5,6 +5,7 @@ session_start();
 require_once __DIR__ . '/../model/complaint_db.php';
 require_once __DIR__ . '/../model/technician_note.php';
 require_once __DIR__ . '/../model/technician_note_db.php';
+require_once __DIR__ . '/../includes/validation.php';
 
 if (
     !isset($_SESSION['employee_id']) ||
@@ -21,25 +22,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $technicianId = (int) $_SESSION['employee_id'];
 
-    $complaint = ComplaintDB::getComplaint($complaintId);
+    /*
+     * Make sure the complaint exists
+     * and belongs to this technician.
+     */
+    $complaint = ComplaintDB::getComplaint(
+        $complaintId
+    );
 
-    // Make sure this complaint belongs to this technician
     if (
         !$complaint ||
         $complaint->getTechnicianId() != $technicianId
     ) {
-        header("Location: ../view/technician_complaints.php");
+        header(
+            "Location: ../view/technician_complaints.php"
+        );
         exit;
     }
 
+
+    /*
+     * Add technician note.
+     */
     if ($action === 'Add Note') {
 
-        $noteText = trim($_POST['note_text'] ?? '');
+        $noteText = trim(
+            $_POST['note_text'] ?? ''
+        );
 
-        if ($noteText === '') {
+        /*
+         * Technician notes are required.
+         */
+        if (!validateRequired($noteText)) {
             header(
                 "Location: ../view/technician_complaint.php?id=" .
-                $complaintId
+                $complaintId .
+                "&error=note_required"
+            );
+            exit;
+        }
+
+        /*
+         * NoteText is stored as TEXT.
+         * Limit notes to 2,000 characters.
+         */
+        if (!validateLength($noteText, 1, 2000)) {
+            header(
+                "Location: ../view/technician_complaint.php?id=" .
+                $complaintId .
+                "&error=note_length"
             );
             exit;
         }
@@ -61,20 +92,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+
+    /*
+     * Mark complaint as resolved.
+     */
     if ($action === 'Mark Resolved') {
 
         $resolutionNotes = trim(
             $_POST['resolution_notes'] ?? ''
         );
 
-        if ($resolutionNotes === '') {
+        /*
+         * Resolution notes are required.
+         */
+        if (!validateRequired($resolutionNotes)) {
             header(
                 "Location: ../view/technician_complaint.php?id=" .
-                $complaintId
+                $complaintId .
+                "&error=resolution_required"
             );
             exit;
         }
 
+        /*
+         * ResolutionNotes is stored as TEXT.
+         * Limit notes to 2,000 characters.
+         */
+        if (
+            !validateLength(
+                $resolutionNotes,
+                1,
+                2000
+            )
+        ) {
+            header(
+                "Location: ../view/technician_complaint.php?id=" .
+                $complaintId .
+                "&error=resolution_length"
+            );
+            exit;
+        }
+
+        /*
+         * This method also saves the
+         * resolution date automatically.
+         */
         ComplaintDB::closeComplaint(
             $complaintId,
             $resolutionNotes
@@ -89,7 +151,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-header("Location: ../view/technician_complaints.php");
+header(
+    "Location: ../view/technician_complaints.php"
+);
 exit;
 
 ?>

@@ -171,6 +171,16 @@ The Complaint Management System is fully functional with Customer, Technician, a
 
 The system supports account management, complaint submission, image uploads, complaint assignment, technician workload tracking, technician notes, customer-technician communication, complaint resolution, status tracking, and administrative management.
 
+## Project Summary
+
+The Complaint Management System is a full PHP and MySQL web application that handles customer complaints from the time they are submitted until they are resolved. The system was built using an MVC-style structure and includes separate access for Customers, Technicians, and Administrators.
+
+Customers can create accounts, submit complaints with images, track their complaints, view technician notes, and communicate with their assigned technician. Technicians can manage assigned complaints, communicate with customers, add notes, and complete complaints with resolution information. Administrators can manage customers, employees, products/services, complaint types, technician assignments, and open complaint workloads.
+
+The system also includes HTTPS, role-based authorization, password hashing, prepared statements, server-side validation, image upload validation, and protected complaint access.
+
+Building this application gave me experience connecting PHP, MySQL, authentication, authorization, file handling, validation, database relationships, and MVC concepts together in one complete application.
+
 ## Author
 
 Princess Ellis

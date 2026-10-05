@@ -181,6 +181,14 @@ The system also includes HTTPS, role-based authorization, password hashing, prep
 
 Building this application gave me experience connecting PHP, MySQL, authentication, authorization, file handling, validation, database relationships, and MVC concepts together in one complete application.
 
+# Complaint Management System - Project Demonstration
+
+This video provides a demonstration of the Complaint Management System, including the Customer, Technician, and Administrator features, along with a brief overview of the project code and database.
+
+## Video Demonstration
+
+https://youtu.be/diYS8kjHFFg 
+
 ## Author
 
 Princess Ellis

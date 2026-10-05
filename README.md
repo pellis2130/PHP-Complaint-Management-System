@@ -2,36 +2,43 @@
 
 The Complaint Management System is a PHP and MySQL web application designed to manage customer complaints from submission through resolution.
 
-The application uses object-oriented PHP and an MVC-style structure to separate database operations, application processing, and the user interface.
+The application uses object-oriented PHP and an MVC-style structure to separate database operations, application processing, and the user interface. Different features are available based on whether the logged-in user is a Customer, Technician, or Administrator.
 
 ## Features
 
 ### Customer
 - Create a customer account
-- Log in securely
+- Log in securely using email and password
 - Update profile information
 - Submit new complaints
 - Select a product or service
 - Select a complaint type
 - View submitted complaints
 - Track complaint status
+- View technician notes
 - Log out securely
 
 ### Technician
-- Log in using an employee account
+- Log in securely using an employee User ID and password
 - View assigned complaints
 - View complaint details
 - Add technician notes
 - Mark complaints as resolved
 - Add resolution notes
+- Save the complaint resolution date
 - Change password
 - Log out securely
 
 ### Administrator
-- Log in using an administrator account
-- View open complaints
-- Assign complaints to technicians
+- Log in securely using an administrator account
+- View all open complaints
+- View unassigned open complaints
+- View the technician assigned to an open complaint
+- Assign and reassign complaints to technicians
 - View customers and employees
+- Update customer information
+- Add new employee accounts
+- Update employee information
 - Manage products and services
 - Add and remove products/services
 - Manage complaint types
@@ -45,12 +52,13 @@ The application supports the complaint process from beginning to end:
 
 1. A customer submits a complaint.
 2. The complaint is stored with an Open status.
-3. An administrator reviews the complaint.
+3. An administrator reviews open and unassigned complaints.
 4. The administrator assigns the complaint to a technician.
 5. The technician views the assigned complaint.
 6. The technician can add notes while working on the issue.
-7. The technician adds resolution notes and marks the complaint as resolved.
-8. The complaint status is updated to Closed.
+7. The customer can view updates and technician notes.
+8. The technician adds resolution notes and marks the complaint as resolved.
+9. The resolution date is saved and the complaint status is updated to Closed.
 
 ## Database
 
@@ -74,6 +82,7 @@ The database contains tables for:
 - MySQL
 - HTML
 - CSS
+- Apache
 - XAMPP
 - phpMyAdmin
 - Visual Studio Code
@@ -93,15 +102,27 @@ The project is organized using an MVC-style structure:
 
 ## Security
 
-The application includes:
+The application includes several security features:
 
-- Password hashing
-- Password verification
+- HTTPS support
+- Automatic HTTP to HTTPS redirection
+- Password hashing using PHP password functions
+- Password verification during login
 - Session-based authentication
-- Role-based access for customers, technicians, and administrators
+- Session ID regeneration after successful login
+- Role-based authorization for Customers, Technicians, and Administrators
+- Protected pages based on user role
+- Complaint access restricted to the appropriate customer or assigned technician
 - Prepared database statements
-- Input validation
-- Protected customer, technician, and administrator pages
+- Server-side input validation
+- Output escaping when displaying user data
+- Secure logout using session destruction
+
+## Current Development
+
+The core complaint management system is functional. Customers can submit and track complaints, technicians can work with assigned complaints, and administrators can manage users and complaint assignments.
+
+Additional final development and testing will continue as the project progresses.
 
 ## Author
 
